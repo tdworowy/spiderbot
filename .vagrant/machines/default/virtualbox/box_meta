@@ -1,1 +1,1 @@
-{"name":"debian/bullseye64","version":"11.20240212.1","provider":"virtualbox","directory":"boxes/debian-VAGRANTSLASH-bullseye64/11.20240212.1/virtualbox"}
+{"name":"generic-x32/debian11","version":"4.3.12","provider":"virtualbox","directory":"boxes/generic-x32-VAGRANTSLASH-debian11/4.3.12/i386/virtualbox"}

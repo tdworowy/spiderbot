@@ -2,17 +2,31 @@ https://www.modio.se/cross-compiling-rust-binaries-to-armv7.html
 https://medium.com/@wizofe/cross-compiling-rust-for-arm-e-g-raspberry-pi-using-any-os-11711ebfc52b
 
 
-vagrant init debian/bullseye64
+
+------------vargant
+
+https://app.vagrantup.com/boxes/search?page=2&provider=libvirt&q=debian%2F&sort=downloads&utf8=%E2%9C%93
+
+vagrant plugin install vagrant-scp
+vagrant init generic-x32/debian11 //debian/bullseye64
 vagrant up
 vagrant ssh
 
-source $HOME/.cargo/envsudo apt-get install -qq gcc-arm-linux-gnueabihf
+
+curl https://sh.rustup.rs -sSf | sh
+
+source $HOME/.cargo/env
+sudo apt install -qq gcc-arm-linux-gnueabihf -y
 rustup target add armv7-unknown-linux-gnueabihf
 
-mkdir -p ~/.cargo# > should not be included when pastingcat >>~/.cargo/config <<EOF
+mkdir -p ~/.cargo
+cat >>~/.cargo/config <<EOF
 > [target.armv7-unknown-linux-gnueabihf]
 > linker = "arm-linux-gnueabihf-gcc"
 > EOF
 
 
 cargo build --target=armv7-unknown-linux-gnueabihf
+
+
+vagrant scp default:/home/vagrant/spiderbot/target/armv7-unknown-linux-gnueabihf/debug/spiderbot spiderbot
