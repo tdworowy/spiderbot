@@ -7,6 +7,6 @@ edition = "2021"
 
 [dependencies]
 rppal = "0.17.1"
-actix-web = "4.5.1"
+#actix-web = "4.5.1"
 cross ="0.2.5"
 

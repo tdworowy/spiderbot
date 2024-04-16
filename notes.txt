@@ -1,1 +1,18 @@
 https://www.modio.se/cross-compiling-rust-binaries-to-armv7.html
+https://medium.com/@wizofe/cross-compiling-rust-for-arm-e-g-raspberry-pi-using-any-os-11711ebfc52b
+
+
+vagrant init debian/bullseye64
+vagrant up
+vagrant ssh
+
+source $HOME/.cargo/envsudo apt-get install -qq gcc-arm-linux-gnueabihf
+rustup target add armv7-unknown-linux-gnueabihf
+
+mkdir -p ~/.cargo# > should not be included when pastingcat >>~/.cargo/config <<EOF
+> [target.armv7-unknown-linux-gnueabihf]
+> linker = "arm-linux-gnueabihf-gcc"
+> EOF
+
+
+cargo build --target=armv7-unknown-linux-gnueabihf
