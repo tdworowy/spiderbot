@@ -3,5 +3,9 @@ use utils::gpio_status;
 
 fn main() {
     println!("Start!");
-    gpio_status::print_all_headers();
+    
+    match gpio_status::print_all_headers() {
+        Ok(_) => println!("Ok!"),
+        Err(error) => println!("{:?}", error),
+    };
 }
