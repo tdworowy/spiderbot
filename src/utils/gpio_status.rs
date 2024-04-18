@@ -127,7 +127,7 @@ pub fn print_header(header: &[PinType]) -> Result<(), Box<dyn Error>> {
 
 pub fn print_all_headers() -> Result<(), Box<dyn Error>> {
     let device = DeviceInfo::new()?.model();
-    println!("{:?}", device);
+    println!("Device Model: {:?}", device);
     match device {
         Model::RaspberryPiBRev1 => {
             // The GPIO header on the earlier Pi models mostly overlaps with the first 26 pins of
