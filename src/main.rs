@@ -8,4 +8,5 @@ fn main() {
         Ok(_) => println!("Ok!"),
         Err(error) => println!("{:?}", error),
     };
+    println!("End!");
 }
