@@ -1,9 +1,12 @@
+use std::collections::HashMap;
 use std::error::Error;
 use std::fmt;
 use std::process;
 
 use rppal::gpio::Gpio;
 use rppal::system::{DeviceInfo, Model};
+
+use serde::{Deserialize, Serialize};
 
 enum PinType {
     Gpio(u8),
@@ -156,3 +159,94 @@ pub fn print_all_headers() -> Result<(), Box<dyn Error>> {
         }
     }
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GpioData {
+    gpio: u8,
+    mode: String,
+    l: u8,
+}
+
+fn prepare_gpio_data(header: &[PinType]) -> Result<HashMap<usize, GpioData>, Box<dyn Error>> {
+    let gpio = Gpio::new()?;
+    let mut gpio_data: HashMap<usize, GpioData> = HashMap::new();
+
+    for (idx, pin_type) in header.iter().enumerate() {
+        match pin_type {
+            PinType::Gpio(bcm_gpio) => {
+                let pin = gpio.get(*bcm_gpio)?;
+
+                gpio_data.insert(
+                    idx + 1,
+                    GpioData {
+                        gpio: *bcm_gpio,
+                        mode: format!("{}", pin.mode()).to_uppercase(),
+                        l: pin.read() as u8,
+                    },
+                );
+            }
+            _ => {
+                gpio_data.insert(
+                    idx + 1,
+                    GpioData {
+                        gpio: 0,
+                        mode: "".to_string(),
+                        l: 0,
+                    },
+                );
+            }
+        };
+    }
+
+    Ok(gpio_data)
+}
+
+pub fn get_gpio_data(device_model: Model) -> HashMap<usize, GpioData> {
+    let mut gpio_data: HashMap<usize, GpioData> = HashMap::new();
+
+    match device_model {
+        Model::RaspberryPiBRev1 => {
+            let mut header_rev1 = HEADER;
+            header_rev1[2] = PinType::Gpio(0);
+            header_rev1[4] = PinType::Gpio(1);
+            header_rev1[12] = PinType::Gpio(21);
+
+            match prepare_gpio_data(&header_rev1[..MAX_PINS_SHORT]) {
+                Ok(data) => gpio_data = data,
+                Err(error) => println!("{:?}", error),
+            };
+        }
+        Model::RaspberryPiA | Model::RaspberryPiBRev2 => {
+            match prepare_gpio_data(&HEADER[..MAX_PINS_SHORT]) {
+                Ok(data) => gpio_data = data,
+                Err(error) => println!("{:?}", error),
+            };
+        }
+
+        Model::RaspberryPiAPlus
+        | Model::RaspberryPiBPlus
+        | Model::RaspberryPi2B
+        | Model::RaspberryPi3APlus
+        | Model::RaspberryPi3B
+        | Model::RaspberryPi3BPlus
+        | Model::RaspberryPi4B
+        | Model::RaspberryPi5
+        | Model::RaspberryPiZero
+        | Model::RaspberryPiZeroW => {
+            match prepare_gpio_data(&HEADER[..MAX_PINS_LONG]) {
+                Ok(data) => gpio_data = data,
+                Err(error) => println!("{:?}", error),
+            };
+        }
+        model => {
+            eprintln!("Error: No GPIO header information available for {}", model);
+            process::exit(1);
+        }
+    }
+    gpio_data
+}
+
+/*{
+1: {gpio:1. Mode:"ALT0", L=1}
+}
+*/
