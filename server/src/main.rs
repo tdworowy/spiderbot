@@ -13,7 +13,7 @@ async fn main() -> std::io::Result<()> {
     };
 
     HttpServer::new(|| App::new().service(rest_api::gpio_status_api))
-        .bind(("0.0.0.0", 8080))?
+        .bind(("0.0.0.0", 3000))?
         .run()
         .await
 }

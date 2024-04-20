@@ -189,9 +189,9 @@ fn prepare_gpio_data(header: &[PinType]) -> Result<HashMap<usize, GpioData>, Box
                 gpio_data.insert(
                     idx + 1,
                     GpioData {
-                        gpio: 0,
+                        gpio: -1,
                         mode: "".to_string(),
-                        l: 0,
+                        l: -1,
                     },
                 );
             }
