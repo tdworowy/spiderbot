@@ -162,9 +162,9 @@ pub fn print_all_headers() -> Result<(), Box<dyn Error>> {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct GpioData {
-    gpio: u8,
+    gpio: i16,
     mode: String,
-    l: u8,
+    l: i16,
 }
 
 fn prepare_gpio_data(header: &[PinType]) -> Result<HashMap<usize, GpioData>, Box<dyn Error>> {
@@ -179,9 +179,9 @@ fn prepare_gpio_data(header: &[PinType]) -> Result<HashMap<usize, GpioData>, Box
                 gpio_data.insert(
                     idx + 1,
                     GpioData {
-                        gpio: *bcm_gpio,
+                        gpio: *bcm_gpio as i16,
                         mode: format!("{}", pin.mode()).to_uppercase(),
-                        l: pin.read() as u8,
+                        l: pin.read() as i16,
                     },
                 );
             }
