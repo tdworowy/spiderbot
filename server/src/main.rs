@@ -3,7 +3,7 @@ mod gpio;
 use api::rest_api;
 use gpio::gpio_status;
 
-use actix_web::{App, HttpServer};
+use actix_web::{web::service, App, HttpServer};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -12,8 +12,12 @@ async fn main() -> std::io::Result<()> {
         Err(error) => println!("{:?}", error),
     };
 
-    HttpServer::new(|| App::new().service(rest_api::gpio_status_api))
-        .bind(("0.0.0.0", 3000))?
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new()
+            .service(rest_api::gpio_status_api)
+            .service(rest_api::test_servo)
+    })
+    .bind(("0.0.0.0", 3000))?
+    .run()
+    .await
 }
