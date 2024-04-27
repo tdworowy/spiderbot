@@ -1,8 +1,8 @@
 use crate::gpio;
 
-use actix_web::{cookie::time::error, get, post, HttpResponse, Responder, web};
-use serde::{Deserialize, Serialize};
+use actix_web::{cookie::time::error, get, post, web, HttpResponse, Responder};
 use rppal::system::DeviceInfo;
+use serde::{Deserialize, Serialize};
 
 use gpio::{gpio_status, servo};
 
@@ -32,6 +32,7 @@ struct ServoTestParameters {
     pulse_min_us: u64,
     pulse_neutral_us: u64,
     pulse_max_us: u64,
+    step_by: usize,
 }
 
 #[post("/test_servo")]
@@ -42,6 +43,7 @@ pub async fn test_servo(parameters: web::Json<ServoTestParameters>) -> impl Resp
         _parameters.pulse_min_us,
         _parameters.pulse_neutral_us,
         _parameters.pulse_max_us,
+        _parameters.step_by,
     ) {
         Ok(()) => HttpResponse::Ok(),
         Err(error) => {
