@@ -34,3 +34,10 @@ vagrant scp default:/home/vagrant/spiderbot/target/armv7-unknown-linux-gnueabihf
 
 ---Vagrant and Windows Subsystem for Linux
 export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+
+
+--- TODO
+try use https://github.com/Escain/HiwonderRPI/blob/master/src/HiwonderBusServo.hpp (?)
+or recreate it using https://github.com/golemparts/rppal/blob/master/examples/uart_blocking_read.rs
+
+https://docs.rs/rppal/latest/rppal/uart/index.html
