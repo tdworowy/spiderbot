@@ -44,9 +44,11 @@ if __name__ == "__main__":
     gpio_status = requests.get(f"http://{robot_ip}:{robot_port}/get_gpio_status")
     print(gpio_status.json())
 
-    print("Testing servo mechanism....")
-    response = requests.post(f"http://{robot_ip}:{robot_port}/test_servo", data=json.dumps(data),
-    headers={'Content-type': 'application/json', 'Accept': 'text/plain'})
+    servo_bus_bytes = requests.get(f"http://{robot_ip}:{robot_port}/get_bus_servo_bytes")
 
-    print(response.status_code)
-    print(response.text)
+    # print("Testing servo mechanism....")
+    # response = requests.post(f"http://{robot_ip}:{robot_port}/test_servo", data=json.dumps(data),
+    # headers={'Content-type': 'application/json', 'Accept': 'text/plain'})
+    #
+    # print(response.status_code)
+    # print(response.text)

@@ -14,7 +14,6 @@ const GPIO_PWM: [u8; 20] = [
 // const PULSE_NEUTRAL_US: u64 = 3500; // 1500
 // const PULSE_MAX_US: u64 = 5500; //1800
 
-
 fn test_servo_single(
     gpio_number: u8,
     period_ms: u64,

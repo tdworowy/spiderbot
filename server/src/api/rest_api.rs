@@ -1,10 +1,23 @@
+use crate::bus_servo;
 use crate::gpio;
 
 use actix_web::{cookie::time::error, get, post, web, HttpResponse, Responder};
 use rppal::system::DeviceInfo;
 use serde::{Deserialize, Serialize};
 
+use bus_servo::uart;
 use gpio::{gpio_status, servo};
+
+#[get("/get_bus_servo_bytes")]
+pub async fn get_bus_servo_bytes() -> impl Responder {
+    match uart::read_uart() {
+        Ok(bus_servo_bytes) => HttpResponse::Ok().body(bus_servo_bytes.to_string()),
+        Err(error) => {
+            eprintln!("{:?}", error);
+            HttpResponse::InternalServerError().body("Serialization error")
+        }
+    }
+}
 
 #[get("/get_gpio_status")]
 pub async fn gpio_status_api() -> impl Responder {
